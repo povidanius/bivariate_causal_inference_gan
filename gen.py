@@ -154,6 +154,8 @@ if __name__ == "__main__":
     x = x.detach().numpy()
     y = y.detach().numpy()
     
+    print(f"x.shape {x.shape}, y.shape{y.shape}")
+
     fig = plt.figure()
     fig.subplots_adjust(hspace=0.4, wspace=0.4)
     for i in range(1, nb+1):
