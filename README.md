@@ -12,7 +12,7 @@ python gen.py
 
 ## Discriminator
 
-The discriminator is a DeepSet neural network (average pooling). It accepts inputs tensor of size $(n_b, dim_x + dim_y, n)$, where $(n_b)$ is batch size, $dim$
+The discriminator is a DeepSet neural network (average pooling). It accepts two inputs tensors $X$ and $Y$ of size $(n_b, dim_x, n)$, and $(n_b, dim_y, n)$, where $(n_b)$ is batch size, $dim_x$ and $dim_y$ are corresponding dimensions, and $n$ is sample size.
 
 ## Bibliography
 
