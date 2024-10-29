@@ -58,7 +58,7 @@ if __name__ == "__main__":
     x = torch.rand(512,1)
     y = x*x  + 0.1*torch.randn(512,1)
 
-    sigma = 0.1
+    sigma = 0.02
     delta_xy = laplacian_regularization_with_multivariate_inputs(x,y, normalized=True, sigma=sigma)
     delta_yx = laplacian_regularization_with_multivariate_inputs(y,x, normalized=True, sigma=sigma)
 
