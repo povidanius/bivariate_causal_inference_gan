@@ -3,6 +3,10 @@ import torch.nn as nn
 from typing import Union
 from torch import FloatTensor
 from torch.autograd import Variable
+import matplotlib.pyplot as plt
+from gen import * 
+import numpy as np
+
 
 NetIO = Union[FloatTensor, Variable]
 
@@ -106,20 +110,46 @@ def count_parameters(model):
 
 if __name__ == "__main__":
 
-    batch_size = 4
+    batch_size = 8
     dim_x = 1
     dim_y = 1
     num_points = 1024
-    X = torch.randn(batch_size, dim_x, num_points)
-    Y = torch.randn(batch_size, dim_y, num_points)
+    latent_dim = 20
 
-    D = Discriminator(input_dim = dim_x, output_dim = dim_y)    
-    D.eval()    
+    G = Generator(n_batch=batch_size, n_points_pwl=num_points, latent_dim=latent_dim)
+
+    Zx = torch.randn(batch_size, num_points, latent_dim)
+    Ze = torch.randn(batch_size, num_points, latent_dim) 
+    Zf = torch.randn(batch_size, latent_dim) 
+    
+    G.gen_f(Zf)
+    X = G.forward_x(Zx)
+    Y = G.forward_y(X,Ze)
+
+
+    D = Discriminator(input_dim = dim_x, output_dim = dim_y)
+        
+    breakpoint()
     
     out_f, out_b = D.forward(X,Y)    
+    
     print("Forward:")
     print(out_f)
     print("Backward:")
     print(out_b)    
+    """
+    fig = plt.figure()
+    fig.subplots_adjust(hspace=0.4, wspace=0.4)
+    for i in range(1, batch_size+1):
+        ax = fig.add_subplot(2, 4, i)
+     
+        xp = G.xp 
+        yp = G.yp 
+        ax.plot(xp[i-1,:].detach().numpy(), yp[i-1,:].detach().numpy(),'b-')    
+    plt.show()
+    """
+
+
+
 
 

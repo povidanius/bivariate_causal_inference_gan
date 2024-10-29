@@ -84,10 +84,6 @@ class Generator(nn.Module):
         self.gen_fun = self.mlp([self.latent_dim,8,self.n_points_pwl]) #8
 
 
-        #self.noise_level = torch.nn.Parameter(noise_level*torch.ones(1), requires_grad=True)
-
-
-
 
     def mlp(self, architecture):
         prev_neurones = architecture[0]
@@ -110,15 +106,14 @@ class Generator(nn.Module):
 
 
     def forward_f(self,x):
-        return calibrate1d(x, self.xp, self.yp) 
+        return calibrate1d(x, self.xp, self.yp)
 
     def forward_x(self,z):    
-        x = self.gen_x.forward(z).squeeze(2).permute(1,0)
-        x = self.normalize01(x.permute(1,0)).permute(1,0)  
+        x = self.normalize01(self.gen_x.forward(z))
         return  x 
 
     def forward_e(self,z):
-        e = self.gen_e.forward(z).squeeze(2).permute(1,0) 
+        e = self.gen_e.forward(z)
         e = e - e.mean()
         e = e / e.std()
         return e 
@@ -143,11 +138,12 @@ if __name__ == "__main__":
 
     G = Generator(n_batch=nb, n_points_pwl=pts_pwl, latent_dim=latent_dim)
     Zx = torch.randn(nb, pts, latent_dim)
-    Ze = torch.randn(nb, pts, latent_dim) 
+    Ze = torch.randn(nb, pts, 1).squeeze()
     Zf = torch.randn(nb, latent_dim) 
     
     G.gen_f(Zf)
     x = G.forward_x(Zx)   
+    breakpoint()
     y = G.forward_y(x,Ze) 
 
 
